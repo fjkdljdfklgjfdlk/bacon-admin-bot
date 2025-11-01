@@ -1,24 +1,28 @@
 // server.js
-// npm install express node-fetch
-const express = require("express");
-const fetch = require("node-fetch"); // or global fetch in newer node
+// To install dependencies: npm install express node-fetch
+
+import express from "express";
+import fetch from "node-fetch"; // ES module import
+
 const app = express();
 app.use(express.json());
 
+// Get your OpenAI API key from environment variable
 const OPENAI_KEY = process.env.OPENAI_API_KEY;
-const MODEL = "gpt-4"; // replace with whichever model you have access to
+const MODEL = "gpt-4"; // Replace with your accessible model
 
 if (!OPENAI_KEY) {
   console.error("Set OPENAI_API_KEY environment variable");
   process.exit(1);
 }
 
+// POST /ask endpoint
 app.post("/ask", async (req, res) => {
   try {
     const { prompt } = req.body;
     if (!prompt) return res.status(400).json({ error: "No prompt provided" });
 
-    // Build request for OpenAI Chat completions (classic example)
+    // Prepare request body for OpenAI Chat Completion
     const body = {
       model: MODEL,
       messages: [
@@ -44,10 +48,7 @@ app.post("/ask", async (req, res) => {
     }
 
     const data = await r.json();
-    // get the assistant reply (adjust path if using responses endpoint)
-    const reply = data.choices && data.choices[0] && data.choices[0].message
-      ? data.choices[0].message.content
-      : (data.output && data.output[0] && data.output[0].content) || "";
+    const reply = data.choices?.[0]?.message?.content || "";
 
     res.json({ reply });
   } catch (err) {
@@ -56,5 +57,12 @@ app.post("/ask", async (req, res) => {
   }
 });
 
+// Simple GET endpoint to check server status
+app.get("/", (req, res) => {
+  res.send("✅ Bacon Admin backend is running!");
+});
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log("Server listening on port", PORT));
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+
+
