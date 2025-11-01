@@ -7,10 +7,11 @@
   "scripts": {
     "start": "node server.js"
   },
-  "author": "YourName",
+  "author": "BaconSantaOS",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2",
     "node-fetch": "^3.3.2"
   }
 }
+
